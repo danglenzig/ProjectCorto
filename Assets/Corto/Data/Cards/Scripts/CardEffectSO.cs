@@ -17,11 +17,7 @@ public abstract class CardEffectSO : ScriptableObject
 
     public string EffectID { get => effectID; }
 
-
-    public void Execute(CardContext cardContext)
-    {
-        //...
-    }
+    public abstract void Execute(CardContext cardContext);
 
 
     private void OnValidate()
