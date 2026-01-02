@@ -1,8 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-// Repo link https://github.com/danglenzig/ProjectCorto/blob/main/Assets/Corto/Data/Cards/Scripts/DeckSO.cs
-
 [CreateAssetMenu(fileName = "DeckSO", menuName = "Cards/Deck")]
 public class DeckSO : ScriptableObject
 {

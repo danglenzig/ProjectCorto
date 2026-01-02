@@ -7,6 +7,10 @@ public class CardContext
     public string TargetEntityID;
     // some reference to a TBD encounter API
 }
+public interface IEffectCommand
+{
+    void Execute(CardContext context);
+}
 
 // DamageEfectSO, UtilityEffectSO, etc will inherit from this abstract base class
 // and implement their own Execute(CardContext)
@@ -18,8 +22,7 @@ public abstract class CardEffectSO : ScriptableObject
 
     public string EffectID { get => effectID; }
     public string EffectDescription { get => effectDescription; }
-
-    public abstract void Execute(CardContext cardContext);
+    public abstract IEffectCommand CreateRuntimeCommand();
 
     private void OnValidate()
     {

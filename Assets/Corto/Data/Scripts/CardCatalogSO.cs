@@ -1,8 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-// Repo link https://github.com/danglenzig/ProjectCorto/blob/main/Assets/Corto/Data/Cards/Scripts/CardCatalogSO.cs
-
 [CreateAssetMenu(fileName = "CardCatalogSO", menuName = "Cards/CardCatalog")]
 public class CardCatalogSO : ScriptableObject
 {
