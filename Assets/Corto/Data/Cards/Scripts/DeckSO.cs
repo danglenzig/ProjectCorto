@@ -4,13 +4,18 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "DeckSO", menuName = "Cards/Deck")]
 public class DeckSO : ScriptableObject
 {
-    [SerializeField] private List<CardSO> cardSOs;
-    private List<string> cardIDs;
+    [SerializeField] private List<CardSO> cardSOs = new();
+    [SerializeField, HideInInspector] private List<string> cardIDs = new();
     private void OnValidate()
     {
-        cardIDs = new List<string>();
+        if (cardSOs == null) cardSOs = new();
+        if (cardIDs == null) cardIDs = new();
+
+        cardIDs.Clear();
+
         foreach (CardSO cardSO in cardSOs)
         {
+            if (cardSO == null) continue;
             cardIDs.Add(cardSO.CardID);
         }
 # if UNITY_EDITOR
@@ -28,15 +33,18 @@ public class DeckSO : ScriptableObject
     }
     public void RemoveCardID(string cardID)
     {
-        if (!cardIDs.Contains(cardID)) { Debug.LogError($"Card with ID {cardID} not in deck. Can't remove"); return; }
-        cardIDs.Remove(cardID);
+        if (!cardIDs.Remove(cardID))
+        {
+            Debug.LogError($"Card with ID {cardID} not in deck. Can't remove");
+        }
     }
     public void ClearDeck()
     {
-        cardIDs = new List<string>();
+        cardIDs.Clear();
     }
     public void ReplaceDeck(IReadOnlyList<string> newDeck)
     {
-        cardIDs = new List<string>(newDeck);
+        cardIDs.Clear();
+        cardIDs.AddRange(newDeck);
     }
 }
