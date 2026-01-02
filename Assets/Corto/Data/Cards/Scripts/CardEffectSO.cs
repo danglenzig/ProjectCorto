@@ -8,8 +8,8 @@ public class CardContext
     // some reference to a TBD encounter API
 }
 
-
 // DamageEfectSO, UtilityEffectSO, etc will inherit from this abstract base class
+// and implement their own Execute(CardContext)
 [CreateAssetMenu(fileName = "CardEffectSO", menuName = "Cards/Card Effect")]
 public abstract class CardEffectSO : ScriptableObject
 {
@@ -18,7 +18,6 @@ public abstract class CardEffectSO : ScriptableObject
     public string EffectID { get => effectID; }
 
     public abstract void Execute(CardContext cardContext);
-
 
     private void OnValidate()
     {
