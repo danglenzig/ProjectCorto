@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b57d371c3e1b15d4b9c8a275f599dd48, type: 3}
+  m_Name: TestDeck
+  m_EditorClassIdentifier: Assembly-CSharp::DeckSO
+  cardSOs:
+  - {fileID: 11400000, guid: f578e6e5eed42e7499b75936b98b5a6d, type: 2}
+  - {fileID: 11400000, guid: f578e6e5eed42e7499b75936b98b5a6d, type: 2}
+  - {fileID: 11400000, guid: 311e0d1810ab5924abd6ddda8181f0c2, type: 2}
+  - {fileID: 11400000, guid: 311e0d1810ab5924abd6ddda8181f0c2, type: 2}
+  - {fileID: 11400000, guid: 26607452b862b4546830ae8dbcc5762f, type: 2}
+  - {fileID: 11400000, guid: 26607452b862b4546830ae8dbcc5762f, type: 2}
+  cardIDs:
+  - 9cac3ac4-ce91-4db9-8016-0e8d9ad7058b
+  - 9cac3ac4-ce91-4db9-8016-0e8d9ad7058b
+  - a015acc5-210a-4d71-b937-8cefba8cf056
+  - a015acc5-210a-4d71-b937-8cefba8cf056
+  - bfc64f5c-8eda-4668-ae06-85c2a8e37a32
+  - bfc64f5c-8eda-4668-ae06-85c2a8e37a32
