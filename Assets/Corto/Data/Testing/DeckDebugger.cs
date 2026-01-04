@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 public class DeckDebugger : MonoBehaviour
 {
-    [SerializeField] private DeckSO deck;
-    [SerializeField] private CardCatalogSO catalog;
+    //[SerializeField] private DeckSO deck;
+    //[SerializeField] private CardCatalogSO catalog;
     private int idx = 0;
 
-    private void Start()
+    public void DebugDeck(DeckSO deck, CardCatalogSO catalog)
     {
         string debugStr = string.Empty;
 
@@ -17,7 +17,6 @@ public class DeckDebugger : MonoBehaviour
             debugStr += GetCardDebugString(cardSO, idx);
             idx++;
         }
-
         Debug.Log(debugStr);
     }
 

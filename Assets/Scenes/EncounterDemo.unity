@@ -240,8 +240,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9acccd085dd78d44ba78200b5b30c393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeckDebugger
-  deck: {fileID: 11400000, guid: c0402f04629c3044fac7b778491d72ba, type: 2}
-  catalog: {fileID: 11400000, guid: d61083704167ca94b8fd1bf01f6f5502, type: 2}
 --- !u!4 &764320600
 Transform:
   m_ObjectHideFlags: 0
@@ -483,6 +481,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 256c2eb4d48076440a680940817f1859, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EncounterController
+  cardCatalog: {fileID: 11400000, guid: d61083704167ca94b8fd1bf01f6f5502, type: 2}
+  combatantCatalog: {fileID: 11400000, guid: 2074049ba524a2641951bf9d6f5aef54, type: 2}
+  deckDebugger: {fileID: 764320599}
 --- !u!114 &1689065044
 MonoBehaviour:
   m_ObjectHideFlags: 0

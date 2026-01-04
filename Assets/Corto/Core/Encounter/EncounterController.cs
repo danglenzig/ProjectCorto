@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public interface IEncounterView
 {
@@ -8,14 +9,25 @@ public interface IEncounterView
     void ShowVictory(bool playerWon);
     void SetStatusText(string statusString);
 }
+public interface IEncounterEnvironment
+{
+    // tbd...
+}
 
 public class EncounterController : MonoBehaviour, IEncounterRules
 {
+
+    [SerializeField] private CardCatalogSO cardCatalog;
+    [SerializeField] private CombatantCatalogSO combatantCatalog;
 
     public event System.Action<bool> OnEncounterComplete;
 
     private EncounterStateMachine encounterStateMachine = new EncounterStateMachine();
     private IEncounterView view;
+    private IEncounterEnvironment env = null;
+    private Party playerParty;
+    private Party enemyParty;
+
 
     private void Awake()
     {
@@ -24,8 +36,7 @@ public class EncounterController : MonoBehaviour, IEncounterRules
 
     private void Start()
     {
-        encounterStateMachine.RequestTransition(EncounterStateMachine.EnumTransition.TO_INTRO);
-        StartCoroutine(TestRoutine());
+        //
     }
 
     private void OnEnable()
@@ -65,7 +76,6 @@ public class EncounterController : MonoBehaviour, IEncounterRules
                 break;
         }
     }
-
     private void HandleOnStateExited(EncounterStateMachine.StructState leavingState)
     {
         switch (leavingState.StateName)
@@ -82,35 +92,48 @@ public class EncounterController : MonoBehaviour, IEncounterRules
                 break;
         }
     }
-    private System.Collections.IEnumerator TestRoutine()
+    private CardContext GetCardContext(string sourceID, string targetID)
     {
-        const float interval = 2f;
-
-        yield return new WaitForSeconds(interval);
-        encounterStateMachine.RequestTransition(EncounterStateMachine.EnumTransition.TO_PLAYER_TURN);
-        yield return new WaitForSeconds(interval);
-        encounterStateMachine.RequestTransition(EncounterStateMachine.EnumTransition.TO_ENEMY_TURN);
-        yield return new WaitForSeconds(interval);
-        encounterStateMachine.RequestTransition(EncounterStateMachine.EnumTransition.TO_PLAYER_TURN);
-        yield return new WaitForSeconds(interval);
-        encounterStateMachine.RequestTransition(EncounterStateMachine.EnumTransition.TO_ENEMY_TURN);
-        yield return new WaitForSeconds(interval);
-        encounterStateMachine.RequestTransition(EncounterStateMachine.EnumTransition.TO_PLAYER_TURN);
-        yield return new WaitForSeconds(interval);
-        encounterStateMachine.RequestTransition(EncounterStateMachine.EnumTransition.TO_PLAYER_VICTORY);
+        return new CardContext(sourceID, targetID, this);
     }
 
+    private CardSO GetCardOrNull(string id)
+    {
+        return cardCatalog.GetCardOrNull(id);
+    }
+    private CombatantDataSO GetCombatantOrNull(string id)
+    {
+        return combatantCatalog.GetCombatantOrNull(id);
+    }
+
+
+    
+
+    /////////
+    // API //
+    /////////
+
+    public void SetUpEncounter(Party _playerParty, Party _enemyParty, GameObject envPrefab = null)
+    {
+        playerParty = _playerParty;
+        enemyParty = _enemyParty;
+        if (envPrefab)
+        {
+            env = Instantiate(envPrefab).GetComponent<IEncounterEnvironment>();
+        }
+
+        // set up everything
+
+        encounterStateMachine.RequestTransition(EncounterStateMachine.EnumTransition.TO_INTRO);
+    }
+
+    // EncounterUI calls this when the outro routine is complete
     public void SignalEncounterCompleteUI(bool playerWon)
     {
         OnEncounterComplete?.Invoke(playerWon);
         Debug.Log(playerWon);
     }
-
-
-    private CardContext GetCardContext(string sourceID, string targetID)
-    {
-        return new CardContext(sourceID, targetID, this);
-    }
+    
 
     // IEncounterRules Methods
     public void ApplyDamage(string sourceID, string targetID, int damageAmount)
@@ -125,6 +148,4 @@ public class EncounterController : MonoBehaviour, IEncounterRules
     {
         // ...
     }
-
-
 }
