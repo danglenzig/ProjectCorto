@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7af1f4fd84f04145a7909105a746ea7, type: 3}
+  m_Name: StrongEffect001
+  m_EditorClassIdentifier: Assembly-CSharp::StatusEffect
+  effectID: 2a521555-6708-4b31-8949-21e433517dcb
+  effectDescription: Apply strong status to target for 1 turn
+  statusEffect: 3
+  stacks: 1

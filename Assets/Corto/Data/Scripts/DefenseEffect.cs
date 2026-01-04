@@ -7,15 +7,21 @@ public class DefenseEffect : CardEffectSO
 
     class DefenseEffectCommand : IEffectCommand
     {
+        private readonly int defenseAmount;
+        public DefenseEffectCommand(int _defenseAmount)
+        {
+            defenseAmount = _defenseAmount;
+        }
         public void Execute(CardContext context)
         {
-            // ...?
+            string sourceID = context.SourceEntityID;
+            string targetID = context.TargetEntityID;
+            context.EncounterRules.ApplyBlock(targetID, defenseAmount);
         }
     }
     public override IEffectCommand CreateRuntimeCommand()
     {
-        DefenseEffectCommand defenseEffectCommand = new DefenseEffectCommand();
-        // ...?
+        DefenseEffectCommand defenseEffectCommand = new DefenseEffectCommand(defenseAmount);
         return defenseEffectCommand;
     }
 }

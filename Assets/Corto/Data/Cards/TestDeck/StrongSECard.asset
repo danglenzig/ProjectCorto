@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b669af0828c11344a6e4621010aba3b, type: 3}
+  m_Name: StrongSECard
+  m_EditorClassIdentifier: Assembly-CSharp::CardSO
+  cardID: 50bdbb53-f45f-4812-8e35-c25b6f4f18e2
+  displayName: Strong 1
+  description: Apply STRONG for 1 turn
+  effects:
+  - {fileID: 11400000, guid: 7ea274583fa38564bbeda5f9a43ccbc7, type: 2}
+  tags: 02000000
+  customTags: []
+  targetingMode: 0

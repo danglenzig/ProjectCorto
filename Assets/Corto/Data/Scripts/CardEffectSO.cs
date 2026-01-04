@@ -5,7 +5,14 @@ public class CardContext
 {
     public string SourceEntityID;
     public string TargetEntityID;
-    // some reference to a TBD encounter API
+    public IEncounterRules EncounterRules;
+
+    public CardContext(string _sourceEntityID, string _targetEntityID, IEncounterRules _rules)
+    {
+        SourceEntityID = _sourceEntityID;
+        TargetEntityID = _targetEntityID;
+        EncounterRules = _rules;
+    }
 }
 public interface IEffectCommand
 {

@@ -3,8 +3,6 @@ using TMPro;
 
 public class EncounterUI : MonoBehaviour, IEncounterView
 {
-    public event System.Action OnEncounterCompleteUI;
-
     [SerializeField] private TMP_Text statusText;
 
     public void ShowIntro()
@@ -32,6 +30,8 @@ public class EncounterUI : MonoBehaviour, IEncounterView
     {
         const float duration = 2f;
         yield return new WaitForSeconds(duration);
-        OnEncounterCompleteUI?.Invoke();
+
+        EncounterController ec = GetComponent<EncounterController>();
+        ec.SignalEncounterCompleteUI(playerWon);
     }
 }

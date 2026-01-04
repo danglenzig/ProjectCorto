@@ -1,6 +1,7 @@
 public enum EnumCardTag
 {
     ATTACK,
-    DEFENSE
+    DEFENSE,
+    STATUS
     // more later
 }

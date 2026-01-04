@@ -15,17 +15,13 @@ public class DamageEffect : CardEffectSO
         {
             string sourceID = context.SourceEntityID;
             string targetID = context.TargetEntityID;
-            // later (when we have an EncounterController) something like...
-            // encounterController.DealDamage(sourceID, targetID)
+            context.EncounterRules.ApplyDamage(sourceID, targetID, damageAmount);
         }
     }
 
     public override IEffectCommand CreateRuntimeCommand()
     {
         DamageEffectCommand damageEffectCommand = new DamageEffectCommand(damageAmount);
-
-        // ...?
-
         return damageEffectCommand;
     }
 }

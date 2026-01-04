@@ -9,7 +9,7 @@ public interface IEncounterView
     void SetStatusText(string statusString);
 }
 
-public class EncounterController : MonoBehaviour
+public class EncounterController : MonoBehaviour, IEncounterRules
 {
 
     public event System.Action<bool> OnEncounterComplete;
@@ -32,19 +32,11 @@ public class EncounterController : MonoBehaviour
     {
         encounterStateMachine.OnStateEntered += HandleOnStateEntered;
         encounterStateMachine.OnStateExited += HandleOnStateExited;
-        if (view is EncounterUI)
-        {
-            (view as EncounterUI).OnEncounterCompleteUI += HandleOnEncounterCompleteUI;
-        }
     }
     private void OnDisable()
     {
         encounterStateMachine.OnStateEntered -= HandleOnStateEntered;
         encounterStateMachine.OnStateExited -= HandleOnStateExited;
-        if (view is EncounterUI)
-        {
-            (view as EncounterUI).OnEncounterCompleteUI -= HandleOnEncounterCompleteUI;
-        }
     }
 
     private void HandleOnStateEntered(EncounterStateMachine.StructState enteredState)
@@ -108,11 +100,30 @@ public class EncounterController : MonoBehaviour
         encounterStateMachine.RequestTransition(EncounterStateMachine.EnumTransition.TO_PLAYER_VICTORY);
     }
 
-    private void HandleOnEncounterCompleteUI()
+    public void SignalEncounterCompleteUI(bool playerWon)
     {
-        bool playerWon = encounterStateMachine.CurrentState.StateName == EncounterStateMachine.EnumStateName.PLAYER_VICTORY;
-        Debug.Log(playerWon);
         OnEncounterComplete?.Invoke(playerWon);
+        Debug.Log(playerWon);
+    }
+
+
+    private CardContext GetCardContext(string sourceID, string targetID)
+    {
+        return new CardContext(sourceID, targetID, this);
+    }
+
+    // IEncounterRules Methods
+    public void ApplyDamage(string sourceID, string targetID, int damageAmount)
+    {
+        // ...
+    }
+    public void ApplyBlock(string targetID, int blockAmount)
+    {
+        // ...
+    }
+    public void ApplyStatus(string sourceID, string targetID, EnumStatusEffect statusEffect, int stacks)
+    {
+        // ...
     }
 
 

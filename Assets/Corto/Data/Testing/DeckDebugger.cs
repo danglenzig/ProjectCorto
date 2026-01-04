@@ -5,7 +5,6 @@ public class DeckDebugger : MonoBehaviour
 {
     [SerializeField] private DeckSO deck;
     [SerializeField] private CardCatalogSO catalog;
-
     private int idx = 0;
 
     private void Start()
@@ -37,7 +36,6 @@ public class DeckDebugger : MonoBehaviour
         debugStr += "\n";
         return debugStr;
     }
-
     private string GetEffectsDebugString(IReadOnlyList<CardEffectSO> effectsList)
     {
         string debugStr = string.Empty;
@@ -59,6 +57,4 @@ public class DeckDebugger : MonoBehaviour
         }
         return debugStr;
     }
-
-
 }
