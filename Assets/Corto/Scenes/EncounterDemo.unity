@@ -483,7 +483,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EncounterController
   cardCatalog: {fileID: 11400000, guid: d61083704167ca94b8fd1bf01f6f5502, type: 2}
   combatantCatalog: {fileID: 11400000, guid: 2074049ba524a2641951bf9d6f5aef54, type: 2}
-  deckDebugger: {fileID: 764320599}
 --- !u!114 &1689065044
 MonoBehaviour:
   m_ObjectHideFlags: 0

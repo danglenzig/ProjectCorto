@@ -1,6 +1,30 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+[System.Serializable] // not sure if needed
+public class EncounterData
+{
+    private Party playerParty;
+    private Party enemyParty;
+    private GameObject environmentPrefab;
+
+    public Party PlayerParty { get => playerParty; }
+    public Party EnemyParty { get => enemyParty; }
+    public GameObject EnvironmentPrefab { get => environmentPrefab; }
+    public EncounterData()
+    {
+        playerParty = new Party(new List<string>());
+        enemyParty = new Party(new List<string>());
+        environmentPrefab = null;
+    }
+    public EncounterData(Party _playerParty, Party _enemyParty, GameObject _environmentPrefab)
+    {
+        playerParty = _playerParty;
+        enemyParty = _enemyParty;
+        environmentPrefab = _environmentPrefab;
+    }
+}
+
 public interface IEncounterView
 {
     void ShowIntro();
@@ -27,6 +51,8 @@ public class EncounterController : MonoBehaviour, IEncounterRules
     private IEncounterEnvironment env = null;
     private Party playerParty;
     private Party enemyParty;
+    private List<RuntimeCombatant> playerRuntimeCombatants = new List<RuntimeCombatant>();
+    private List<RuntimeCombatant> enemyRuntimeCombatants = new List<RuntimeCombatant>();
 
 
     private void Awake()
@@ -36,7 +62,10 @@ public class EncounterController : MonoBehaviour, IEncounterRules
 
     private void Start()
     {
-        //
+        if (GameServices.Instance == null)
+        {
+            SetUpEncounter(new EncounterData());
+        }
     }
 
     private void OnEnable()
@@ -106,23 +135,53 @@ public class EncounterController : MonoBehaviour, IEncounterRules
         return combatantCatalog.GetCombatantOrNull(id);
     }
 
+    private void FixPlayerRuntimeCombatants(List<string> playerCatalogIDs)
+    {
+        if (playerRuntimeCombatants == null) playerRuntimeCombatants = new();
+        playerRuntimeCombatants.Clear();
+        foreach (string id in playerCatalogIDs)
+        {
+            CombatantDataSO combatantData = combatantCatalog.GetCombatantOrNull(id);
+            if (combatantData == null) continue;
+            RuntimeCombatant runtimeCombatant = new RuntimeCombatant(combatantData);
+            playerRuntimeCombatants.Add(runtimeCombatant);
+        }
+    }
+    private void FixEnemyRuntimeCombatants(List<string> enemyCatalogIDs)
+    {
+        if (enemyRuntimeCombatants == null) enemyRuntimeCombatants = new();
+        enemyRuntimeCombatants.Clear();
+        foreach (string id in enemyCatalogIDs)
+        {
+            CombatantDataSO combatantData = combatantCatalog.GetCombatantOrNull(id);
+            if (combatantData == null) continue;
+            RuntimeCombatant runtimeCombatant = new RuntimeCombatant(combatantData);
+            enemyRuntimeCombatants.Add(runtimeCombatant);
+        }
+    }
 
-    
 
     /////////
     // API //
     /////////
 
-    public void SetUpEncounter(Party _playerParty, Party _enemyParty, GameObject envPrefab = null)
+    public void SetUpEncounter(EncounterData inData)
     {
-        playerParty = _playerParty;
-        enemyParty = _enemyParty;
-        if (envPrefab)
+        Debug.Log("Setting things up...");
+
+        playerParty = inData.PlayerParty;
+        enemyParty = inData.EnemyParty;
+        if (inData.EnvironmentPrefab != null)
         {
-            env = Instantiate(envPrefab).GetComponent<IEncounterEnvironment>();
+            env = Instantiate(inData.EnvironmentPrefab).GetComponent<IEncounterEnvironment>();
         }
 
-        // set up everything
+        List<string> playerCatalogIDs = new List<string>(inData.PlayerParty.CombatantIDs);
+        List<string> enemyCatalogIDs = new List<string>(inData.EnemyParty.CombatantIDs);
+        FixPlayerRuntimeCombatants(playerCatalogIDs);
+        FixEnemyRuntimeCombatants(enemyCatalogIDs);
+
+        DebugCombatants(); // for testing
 
         encounterStateMachine.RequestTransition(EncounterStateMachine.EnumTransition.TO_INTRO);
     }
@@ -147,5 +206,58 @@ public class EncounterController : MonoBehaviour, IEncounterRules
     public void ApplyStatus(string sourceID, string targetID, EnumStatusEffect statusEffect, int stacks)
     {
         // ...
+    }
+
+
+    //////////
+    // Junk //
+    //////////
+    
+    private void DebugCombatants()
+    {
+        
+        string debugStr = string.Empty;
+        debugStr += "--- PLAYER COMBATANTS ---\n";
+        int idx = 0;
+        foreach (RuntimeCombatant rtCombatant in playerRuntimeCombatants)
+        {
+            CombatantDataSO data = combatantCatalog.GetCombatantOrNull(rtCombatant.CatalogID);
+            string combName = data.CombatantName;
+            string rtID = rtCombatant.RuntimeID;
+            string ctID = data.CombatantID;
+            string combDesc = data.CombatantDescription;
+            DeckSO combDeck = data.Deck;
+            int cardsQty = combDeck.CardIDs.Count;
+            idx++;
+
+            debugStr += $"\nCombatant number {idx}:\n";
+            debugStr += $"Runtime ID: {rtID}\n";
+            debugStr += $"Catalog ID: {ctID}\n";
+            debugStr += $"Name: {combName}\n";
+            debugStr += $"Description: {combDeck}\n";
+            debugStr += $"Deck size: {cardsQty} cards\n";
+        }
+        debugStr += "\n--- Enemy COMBATANTS ---\n";
+        idx = 0;
+        foreach (RuntimeCombatant rtCombatant in enemyRuntimeCombatants)
+        {
+            CombatantDataSO data = combatantCatalog.GetCombatantOrNull(rtCombatant.CatalogID);
+            string combName = data.CombatantName;
+            string rtID = rtCombatant.RuntimeID;
+            string ctID = data.CombatantID;
+            string combDesc = data.CombatantDescription;
+            DeckSO combDeck = data.Deck;
+            int cardsQty = combDeck.CardIDs.Count;
+            idx++;
+
+            debugStr += $"\nCombatant number {idx}:\n";
+            debugStr += $"Runtime ID: {rtID}\n";
+            debugStr += $"Catalog ID: {ctID}\n";
+            debugStr += $"Name: {combName}\n";
+            debugStr += $"Description: {combDeck}\n";
+            debugStr += $"Deck size: {cardsQty} cards\n";
+        }
+
+        Debug.Log(debugStr);
     }
 }
