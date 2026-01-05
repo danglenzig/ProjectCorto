@@ -83,6 +83,7 @@ public class EncounterController : MonoBehaviour, IEncounterRules, ICombatantRes
             if (catalogData == null) continue;
             RuntimeCombatant runtimeData = new RuntimeCombatant(catalogData);
             CombatantEncounterData data = new CombatantEncounterData(runtimeData, catalogData);
+            runtimeData.DrawPile = MiscTools.ShuffleListFisherYates<string>(runtimeData.DrawPile);
             playerDataDict[runtimeData.RuntimeID] = data;
         }
     }
@@ -96,6 +97,7 @@ public class EncounterController : MonoBehaviour, IEncounterRules, ICombatantRes
             if (catalogData == null) continue;
             RuntimeCombatant runtimeData = new RuntimeCombatant(catalogData);
             CombatantEncounterData data = new CombatantEncounterData(runtimeData, catalogData);
+            runtimeData.DrawPile = MiscTools.ShuffleListFisherYates<string>(runtimeData.DrawPile);
             enemyDataDict[runtimeData.RuntimeID] = data;
         }
     }
@@ -170,7 +172,7 @@ public class EncounterController : MonoBehaviour, IEncounterRules, ICombatantRes
 
         TryGetCombatant(sourceID, out var sourceData);
 
-        string firstCardID = sourceData.catalogData.Deck.CardIDs[0];
+        string firstCardID = sourceData.runtimeData.DrawPile[0];
         CardSO firstCard = cardCatalog.GetCardOrNull(firstCardID);
 
         Debug.Log($"{playerDataDict[sourceID].catalogData.CombatantName} plays {firstCard.DisplayName}...");

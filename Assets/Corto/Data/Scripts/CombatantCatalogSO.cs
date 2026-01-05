@@ -34,6 +34,12 @@ public class CombatantCatalogSO : ScriptableObject
         }
     }
 
+    public void RuntimeInit(List<CombatantDataSO> _combatantSOs)
+    {
+        combatantSOs = new List<CombatantDataSO>(_combatantSOs);
+        BuildDictionary();
+    }
+
     private void OnValidate()
     {
         BuildDictionary();

@@ -16,9 +16,15 @@ public class DefenseEffect : CardEffectSO
         {
             string sourceID = context.SourceEntityID;
             string targetID = context.TargetEntityID;
-            context.EncounterRules.ApplyBlock(targetID, defenseAmount);
+            context.EncounterRules.ApplyBlock(sourceID, defenseAmount);
         }
     }
+
+    public void RuntimeInit(int _defenseAmount)
+    {
+        defenseAmount = _defenseAmount;
+    }
+
     public override IEffectCommand CreateRuntimeCommand()
     {
         DefenseEffectCommand defenseEffectCommand = new DefenseEffectCommand(defenseAmount);

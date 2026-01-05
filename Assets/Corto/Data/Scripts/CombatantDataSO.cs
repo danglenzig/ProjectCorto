@@ -22,6 +22,17 @@ public class CombatantDataSO : ScriptableObject
     public int MaxHealth { get => maxHealth; }
     // and so on
 
+    public void RuntimeInit(string _combatantName, string _combatandDescription, DeckSO _deck, int _maxHealth = 100)
+    {
+        // for unit testing only
+        combatantID = System.Guid.NewGuid().ToString();
+        combatantName = _combatantName;
+        combatantDescription = _combatandDescription;
+        deck = _deck;
+        maxHealth = _maxHealth;
+    }
+    
+
     private void OnValidate()
     {
         if (string.IsNullOrEmpty(combatantID))

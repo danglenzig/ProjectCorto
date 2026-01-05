@@ -10,17 +10,20 @@ public class DeckSO : ScriptableObject
     {
         if (cardSOs == null) cardSOs = new();
         if (cardIDs == null) cardIDs = new();
+        CreateIDList(cardSOs);
+# if UNITY_EDITOR
+        UnityEditor.EditorUtility.SetDirty(this);
+# endif
+    }
 
+    private void CreateIDList(List<CardSO> cards)
+    {
         cardIDs.Clear();
-
         foreach (CardSO cardSO in cardSOs)
         {
             if (cardSO == null) continue;
             cardIDs.Add(cardSO.CardID);
         }
-# if UNITY_EDITOR
-        UnityEditor.EditorUtility.SetDirty(this);
-# endif
     }
 
     /////////
@@ -46,5 +49,12 @@ public class DeckSO : ScriptableObject
     {
         cardIDs.Clear();
         cardIDs.AddRange(newDeck);
+    }
+
+    public void RuntimeInit(List<CardSO> cards)
+    {
+        cardSOs = cards;
+        if (cardIDs == null) cardIDs = new();
+        CreateIDList(cardSOs);
     }
 }

@@ -19,6 +19,11 @@ public class DamageEffect : CardEffectSO
         }
     }
 
+    public void RuntimeInit(int _damageAmount)
+    {
+        damageAmount = _damageAmount;
+    }
+
     public override IEffectCommand CreateRuntimeCommand()
     {
         DamageEffectCommand damageEffectCommand = new DamageEffectCommand(damageAmount);

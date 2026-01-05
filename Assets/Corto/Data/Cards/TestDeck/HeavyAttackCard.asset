@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: Heavy Attack
   description: Roundhouse kick an opponent in the face
   effects:
-  - {fileID: 11400000, guid: 6d4e66653a805ab4d9bd99c0d28ef439, type: 2}
+  - {fileID: 11400000, guid: 86d0cf6355040e643b54cff82063779a, type: 2}
   tags: 00000000
   customTags: []
   targetingMode: 2

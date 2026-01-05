@@ -31,6 +31,12 @@ public class CardCatalogSO : ScriptableObject
         }
     }
 
+    public void RuntimeInit(List<CardSO> _cardSOs)
+    {
+        cardSOs = new List<CardSO>(_cardSOs);
+        BuildDictionary();
+    }
+
     private void OnValidate()
     {
         BuildDictionary();

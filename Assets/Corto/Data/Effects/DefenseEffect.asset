@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DefenseEffect
   effectID: 181e7a12-ca75-4dab-b788-536e4065d18a
   effectDescription: This is a defense effect.
+  defenseAmount: 2

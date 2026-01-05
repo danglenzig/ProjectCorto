@@ -23,6 +23,12 @@ public class StatusEffect : CardEffectSO
         }
     }
 
+    public void RuntimeInit(EnumStatusEffect _effect, int _stacks)
+    {
+        statusEffect = _effect;
+        stacks = _stacks;
+    }
+
     public override IEffectCommand CreateRuntimeCommand()
     {
 

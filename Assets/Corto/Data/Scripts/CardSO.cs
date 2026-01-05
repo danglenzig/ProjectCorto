@@ -21,6 +21,19 @@ public class CardSO : ScriptableObject
     public IReadOnlyList<string> CustomTags { get => customTags; }
     public EnumTargetingMode TargetingMode { get => targetingMode; }
 
+    public void RuntimeInit(string _displayName, CardEffectSO _effect, EnumCardTag _tag, EnumTargetingMode _targetingMode)
+    {
+        effects = new();
+        tags = new();
+        customTags = new();
+        cardID = System.Guid.NewGuid().ToString();
+        displayName = _displayName;
+        description = _displayName;
+        effects.Add(_effect);
+        tags.Add(_tag);
+        targetingMode = _targetingMode;
+    }
+
 
     private void OnValidate()
     {

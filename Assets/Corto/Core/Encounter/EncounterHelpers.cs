@@ -57,6 +57,11 @@ public class RuntimeCombatant
     private List<EnumStatusEffect> currentStatusEffects;
     // and so on -- currentXYZ for every other "starting value" stat in the SO
 
+    private List<string> drawPile;
+    private List<string> inHand;
+    private List<string> discardPile;
+
+
     public string RuntimeID { get => runtimeID; }
     public string CatalogID { get => catalogID; }
     public int CurrentHealth
@@ -70,6 +75,9 @@ public class RuntimeCombatant
         set { currentBlock = Mathf.Max(0, value); }
     }
     public List<EnumStatusEffect> CurrentStatusEffects { get => currentStatusEffects; }
+    public List<string> DrawPile { get => drawPile; set => drawPile = value; }
+    public List<string> InHand { get => inHand; set => inHand = value; }
+    public List<string> DiscardPile { get => discardPile; set => discardPile = value; }
 
 
     public RuntimeCombatant(CombatantDataSO _configData)
@@ -77,8 +85,13 @@ public class RuntimeCombatant
         runtimeID = System.Guid.NewGuid().ToString();
         catalogID = _configData.CombatantID;
         currentHealth = _configData.MaxHealth;
+        currentBlock = 0;
         currentStatusEffects = new();
         // and so on
+
+        drawPile = new List<string>(_configData.Deck.CardIDs);
+        inHand = new List<string>();
+        discardPile = new List<string>();
     }
 }
 

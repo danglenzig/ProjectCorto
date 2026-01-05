@@ -24,7 +24,11 @@ public class EffectActuator
         {
             Debug.LogError($"Invalid targetID: {targetID}"); return;
         }
-        targetData.runtimeData.CurrentBlock = blockAmount;
+        targetData.runtimeData.CurrentBlock += blockAmount;
+
+        string targetName = targetData.catalogData.CombatantName;
+        int targetBlock = targetData.runtimeData.CurrentBlock;
+        Debug.Log($"{targetName} gains {blockAmount} damage. New block is: {targetBlock}");
     }
     public static void ApplyStatus(string sourceID, string targetID, EnumStatusEffect statusEffect, int stacks, ICombatantResolver combatantResolver)
     {
@@ -36,5 +40,16 @@ public class EffectActuator
         {
             targetData.runtimeData.CurrentStatusEffects.Add(statusEffect);
         }
+
+        string debugStr = string.Empty;
+        string targetName = targetData.catalogData.CombatantName;
+        List<EnumStatusEffect> effects = targetData.runtimeData.CurrentStatusEffects;
+        debugStr += $"{targetName} status effects: ";
+        foreach (EnumStatusEffect effect in effects)
+        {
+            debugStr += $"{effect.ToString()}, ";
+        }
+        Debug.Log(debugStr);
+
     }
 }
