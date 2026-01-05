@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DamageEffect
   effectID: ee19c823-0242-43c5-bea9-1c16c08b1876
   effectDescription: This is a damage effect.
+  damageAmount: 10

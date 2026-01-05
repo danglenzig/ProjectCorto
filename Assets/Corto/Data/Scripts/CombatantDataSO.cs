@@ -1,28 +1,5 @@
 using UnityEngine;
 
-
-public class RuntimeCombatant
-{
-    private string runtimeID;
-    private string catalogID;
-    private int currentHealth;
-    // and so on -- currentXYZ for every other "starting value" stat in the SO
-    
-    public string RuntimeID { get => runtimeID; }
-    public string CatalogID { get => catalogID; }
-    public int CurrentHealth { get => currentHealth; }
-
-
-    public RuntimeCombatant(CombatantDataSO _configData)
-    {
-        runtimeID = System.Guid.NewGuid().ToString();
-        catalogID = _configData.CombatantID;
-        currentHealth = _configData.MaxHealth;
-        // and so on
-    }
-}
-
-
 [CreateAssetMenu(fileName = "CombatantDataSO", menuName = "Combatants/Combatant Data")]
 public class CombatantDataSO : ScriptableObject
 {
