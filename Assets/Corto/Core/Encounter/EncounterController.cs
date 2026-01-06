@@ -2,6 +2,29 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
+
+public interface ITurnOrderDecider
+{
+    List<string> GetTurnOrderList(EncounterController controller);
+}
+
+public class TeamwiseTurnOrderDecider: ITurnOrderDecider
+{
+    public List<string> GetTurnOrderList(EncounterController controller)
+    {
+        List<string> turnOrder = new();
+        foreach(string id in controller.PlayerDataDict.Keys.ToList<string>())
+        {
+            turnOrder.Add(id);
+        }
+        foreach(string id in controller.EnemyDataDict.Keys.ToList<string>())
+        {
+            turnOrder.Add(id);
+        }
+        return turnOrder;
+    }
+}
+
 public class EncounterController : MonoBehaviour, IEncounterRules, ICombatantResolver
 {
 
@@ -14,20 +37,21 @@ public class EncounterController : MonoBehaviour, IEncounterRules, ICombatantRes
     private IEncounterView view;
     private IEncounterEnvironment env = null;
 
-    private Party playerParty;
-    private Party enemyParty;
-
     private Dictionary<string, CombatantEncounterData> playerDataDict;
     private Dictionary<string, CombatantEncounterData> enemyDataDict;
-
+    private ITurnOrderDecider decider;
+    private TurnController turnController;
 
     public IEncounterView View { get => view; }
     public IReadOnlyDictionary<string, CombatantEncounterData> PlayerDataDict { get => playerDataDict; }
     public IReadOnlyDictionary<string, CombatantEncounterData> EnemyDataDict { get => enemyDataDict; }
+    public ITurnOrderDecider Decider { get => decider; }
 
 
     private void Awake()
     {
+        decider = new TeamwiseTurnOrderDecider();
+        turnController = new TurnController(this);
         view = GetComponent<IEncounterView>();
     }
 
@@ -110,8 +134,6 @@ public class EncounterController : MonoBehaviour, IEncounterRules, ICombatantRes
     {
         Debug.Log("Setting things up...");
 
-        playerParty = inData.PlayerParty;
-        enemyParty = inData.EnemyParty;
         if (inData.EnvironmentPrefab != null)
         {
             env = Instantiate(inData.EnvironmentPrefab).GetComponent<IEncounterEnvironment>();
@@ -121,10 +143,9 @@ public class EncounterController : MonoBehaviour, IEncounterRules, ICombatantRes
         List<string> enemyCatalogIDs = new List<string>(inData.EnemyParty.CombatantIDs);
         FixPlayerRuntimeCombatants(playerCatalogIDs);
         FixEnemyRuntimeCombatants(enemyCatalogIDs);
+        encounterStateMachine.RequestTransition(EncounterStateMachine.EnumTransition.TO_INTRO);
 
         EncounterDebugger.DebugCombatants(playerDataDict, enemyDataDict); // for testing
-
-        encounterStateMachine.RequestTransition(EncounterStateMachine.EnumTransition.TO_INTRO);
     }
     
     public void SignalEncounterCompleteUI(bool playerWon)
