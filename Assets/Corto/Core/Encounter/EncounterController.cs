@@ -28,29 +28,46 @@ public class TeamwiseTurnOrderDecider: ITurnOrderDecider
 public class EncounterController : MonoBehaviour, IEncounterRules, ICombatantResolver
 {
 
-    [SerializeField] private CardCatalogSO cardCatalog;
-    [SerializeField] private CombatantCatalogSO combatantCatalog;
-
     public event System.Action<bool> OnEncounterComplete;
 
+    private enum EnumTurnDeciderMode
+    {
+        TEAMWISE,
+        // etc.
+    }
+
+    [SerializeField] private EnumTurnDeciderMode turnOrderMode = EnumTurnDeciderMode.TEAMWISE;
+    [SerializeField] private CardCatalogSO cardCatalog;
+    [SerializeField] private CombatantCatalogSO combatantCatalog;
+    [SerializeField] private int maxInHand = 5;
     private EncounterStateMachine encounterStateMachine = new EncounterStateMachine();
     private IEncounterView view;
     private IEncounterEnvironment env = null;
-
     private Dictionary<string, CombatantEncounterData> playerDataDict;
     private Dictionary<string, CombatantEncounterData> enemyDataDict;
+    private List<string> turnOrder = new();
     private ITurnOrderDecider decider;
     private TurnController turnController;
+    private int turnIdx = -1;
 
     public IEncounterView View { get => view; }
     public IReadOnlyDictionary<string, CombatantEncounterData> PlayerDataDict { get => playerDataDict; }
     public IReadOnlyDictionary<string, CombatantEncounterData> EnemyDataDict { get => enemyDataDict; }
-    public ITurnOrderDecider Decider { get => decider; }
+    //public ITurnOrderDecider Decider { get => decider; }
+    public IReadOnlyList<string> TurnOrder { get => turnOrder; }
+    public int MaxInHand { get => maxInHand; }
+    public int TurnIdx
+    {
+        get => turnIdx;
+        set => turnIdx = value % turnOrder.Count;
+    }
 
 
     private void Awake()
     {
         decider = new TeamwiseTurnOrderDecider();
+        // in the future, switch against the turnOrderMode enum
+
         turnController = new TurnController(this);
         view = GetComponent<IEncounterView>();
     }
@@ -108,6 +125,7 @@ public class EncounterController : MonoBehaviour, IEncounterRules, ICombatantRes
             RuntimeCombatant runtimeData = new RuntimeCombatant(catalogData);
             CombatantEncounterData data = new CombatantEncounterData(runtimeData, catalogData);
             runtimeData.DrawPile = MiscTools.ShuffleListFisherYates<string>(runtimeData.DrawPile);
+
             playerDataDict[runtimeData.RuntimeID] = data;
         }
     }
@@ -143,9 +161,11 @@ public class EncounterController : MonoBehaviour, IEncounterRules, ICombatantRes
         List<string> enemyCatalogIDs = new List<string>(inData.EnemyParty.CombatantIDs);
         FixPlayerRuntimeCombatants(playerCatalogIDs);
         FixEnemyRuntimeCombatants(enemyCatalogIDs);
+        
         encounterStateMachine.RequestTransition(EncounterStateMachine.EnumTransition.TO_INTRO);
+        turnOrder = decider.GetTurnOrderList(this);
 
-        EncounterDebugger.DebugCombatants(playerDataDict, enemyDataDict); // for testing
+        //EncounterDebugger.DebugCombatants(playerDataDict, enemyDataDict); // for testing
     }
     
     public void SignalEncounterCompleteUI(bool playerWon)
@@ -153,6 +173,10 @@ public class EncounterController : MonoBehaviour, IEncounterRules, ICombatantRes
         // EncounterUI calls this when the outro routine is complete
         OnEncounterComplete?.Invoke(playerWon);
         Debug.Log(playerWon);
+    }
+    public void SignalIntroCompleteUI()
+    {
+
     }
     
 
@@ -177,33 +201,5 @@ public class EncounterController : MonoBehaviour, IEncounterRules, ICombatantRes
         if (enemyDataDict.ContainsKey(id)) { data = enemyDataDict[id]; return true; }
         data = null;
         return false;
-    }
-
-    //////////
-    // Junk //
-    //////////
-    
-    public void TestPlayerFirstCard()
-    {
-        // first player combatant plays their first card
-        if (playerDataDict.Count <= 0) return;
-        if (enemyDataDict.Count <= 0) return;
-        string sourceID = playerDataDict.Keys.ToList<string>()[0];
-        string targetID = enemyDataDict.Keys.ToList<string>()[0];
-
-        TryGetCombatant(sourceID, out var sourceData);
-
-        string firstCardID = sourceData.runtimeData.DrawPile[0];
-        CardSO firstCard = cardCatalog.GetCardOrNull(firstCardID);
-
-        Debug.Log($"{playerDataDict[sourceID].catalogData.CombatantName} plays {firstCard.DisplayName}...");
-
-        List<CardEffectSO> firstCardEffects = new List<CardEffectSO>(firstCard.Effects);
-        foreach (CardEffectSO effect in firstCardEffects)
-        {
-            IEffectCommand command = effect.CreateRuntimeCommand();
-            CardContext context = new CardContext(sourceID, targetID, this);
-            command.Execute(context);
-        }
     }
 }

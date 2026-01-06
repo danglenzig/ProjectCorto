@@ -34,4 +34,11 @@ public class EncounterUI : MonoBehaviour, IEncounterView
         EncounterController ec = GetComponent<EncounterController>();
         ec.SignalEncounterCompleteUI(playerWon);
     }
+
+    private System.Collections.IEnumerator SimulateIntroRoutine()
+    {
+        const float duration = 2f;
+        yield return new WaitForSeconds(duration);
+    }
+
 }
