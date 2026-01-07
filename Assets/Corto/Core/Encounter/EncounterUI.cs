@@ -7,7 +7,7 @@ public class EncounterUI : MonoBehaviour, IEncounterView
 
     public void ShowIntro()
     {
-        // ...
+        StartCoroutine(SimulateIntroRoutine());
     }
     public void ShowPlayerTurn()
     {
@@ -39,6 +39,8 @@ public class EncounterUI : MonoBehaviour, IEncounterView
     {
         const float duration = 2f;
         yield return new WaitForSeconds(duration);
+        EncounterController ec = GetComponent<EncounterController>();
+        ec.SignalIntroCompleteUI();
     }
 
 }

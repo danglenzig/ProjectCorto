@@ -27,9 +27,7 @@ public class TeamwiseTurnOrderDecider: ITurnOrderDecider
 
 public class EncounterController : MonoBehaviour, IEncounterRules, ICombatantResolver
 {
-
     public event System.Action<bool> OnEncounterComplete;
-
     private enum EnumTurnDeciderMode
     {
         TEAMWISE,
@@ -45,22 +43,16 @@ public class EncounterController : MonoBehaviour, IEncounterRules, ICombatantRes
     private IEncounterEnvironment env = null;
     private Dictionary<string, CombatantEncounterData> playerDataDict;
     private Dictionary<string, CombatantEncounterData> enemyDataDict;
-    private List<string> turnOrder = new();
     private ITurnOrderDecider decider;
     private TurnController turnController;
-    private int turnIdx = -1;
 
     public IEncounterView View { get => view; }
     public IReadOnlyDictionary<string, CombatantEncounterData> PlayerDataDict { get => playerDataDict; }
     public IReadOnlyDictionary<string, CombatantEncounterData> EnemyDataDict { get => enemyDataDict; }
-    //public ITurnOrderDecider Decider { get => decider; }
-    public IReadOnlyList<string> TurnOrder { get => turnOrder; }
+    public ITurnOrderDecider Decider { get => decider; }
+    public TurnController TurnController { get => turnController; }
     public int MaxInHand { get => maxInHand; }
-    public int TurnIdx
-    {
-        get => turnIdx;
-        set => turnIdx = value % turnOrder.Count;
-    }
+    public EncounterStateMachine EncounterStateMachine { get => encounterStateMachine; }
 
 
     private void Awake()
@@ -161,11 +153,10 @@ public class EncounterController : MonoBehaviour, IEncounterRules, ICombatantRes
         List<string> enemyCatalogIDs = new List<string>(inData.EnemyParty.CombatantIDs);
         FixPlayerRuntimeCombatants(playerCatalogIDs);
         FixEnemyRuntimeCombatants(enemyCatalogIDs);
-        
-        encounterStateMachine.RequestTransition(EncounterStateMachine.EnumTransition.TO_INTRO);
-        turnOrder = decider.GetTurnOrderList(this);
+        turnController.InitializeTurnController();
 
-        //EncounterDebugger.DebugCombatants(playerDataDict, enemyDataDict); // for testing
+        encounterStateMachine.RequestTransition(EncounterStateMachine.EnumTransition.TO_INTRO);
+
     }
     
     public void SignalEncounterCompleteUI(bool playerWon)
@@ -176,7 +167,7 @@ public class EncounterController : MonoBehaviour, IEncounterRules, ICombatantRes
     }
     public void SignalIntroCompleteUI()
     {
-
+        turnController.AdvanceTurn();
     }
     
 
