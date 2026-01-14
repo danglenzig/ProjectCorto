@@ -1,5 +1,13 @@
 using UnityEngine;
 using TMPro;
+public interface IEncounterView
+{
+    void ShowIntro();
+    void ShowPlayerTurn();
+    void ShowEnemyTurn();
+    void ShowVictory(bool playerWon);
+    void SetStatusText(string statusString);
+}
 
 public class EncounterUI : MonoBehaviour, IEncounterView
 {
@@ -17,6 +25,7 @@ public class EncounterUI : MonoBehaviour, IEncounterView
     {
         // ...
     }
+
     public void ShowVictory(bool playerWon)
     {
         StartCoroutine(SimulateVictoryRoutine(playerWon));

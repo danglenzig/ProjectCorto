@@ -7,6 +7,11 @@ public interface ITurnOrderDecider
 {
     List<string> GetTurnOrderList(EncounterController controller);
 }
+public interface ICombatantResolver
+{
+    //CombatantEncounterData TryGetCombatant(string id);
+    bool TryGetCombatant(string id, out CombatantEncounterData? data);
+}
 
 public class TeamwiseTurnOrderDecider: ITurnOrderDecider
 {

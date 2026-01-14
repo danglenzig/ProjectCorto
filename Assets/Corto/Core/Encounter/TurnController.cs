@@ -63,8 +63,6 @@ public class TurnController
         List<string> discardPile    = new List<string>(combData.runtimeData.DiscardPile);
 
         // deal up to the max inhand size
-
-        
         int cardsNeeded = (encounterController.MaxInHand - inHand.Count);
         if (drawPile.Count < cardsNeeded)
         {
@@ -85,6 +83,9 @@ public class TurnController
         combData.runtimeData.DrawPile = new List<string>(drawPile);
         combData.runtimeData.InHand = new List<string>(inHand);
         combData.runtimeData.DiscardPile = new List<string>(discardPile);
+
+        
+
     }
 
     public void HandleEnemyTurn()

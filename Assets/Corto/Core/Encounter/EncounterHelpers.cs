@@ -29,24 +29,13 @@ public class EncounterData
     }
 }
 
-public interface IEncounterView
-{
-    void ShowIntro();
-    void ShowPlayerTurn();
-    void ShowEnemyTurn();
-    void ShowVictory(bool playerWon);
-    void SetStatusText(string statusString);
-}
+
 public interface IEncounterEnvironment
 {
     // tbd...
 }
 
-public interface ICombatantResolver
-{
-    //CombatantEncounterData TryGetCombatant(string id);
-    bool TryGetCombatant(string id, out CombatantEncounterData? data);
-}
+
 
 public class RuntimeCombatant
 {
