@@ -8,7 +8,7 @@ public class CombatantCatalogSO : ScriptableObject
     private Dictionary<string, CombatantDataSO> combatantDict;
 
 
-    [SerializeField] private DeckDebugger deckDebugger;
+    //[SerializeField] private DeckDebugger deckDebugger;
 
     private void OnEnable()
     {
